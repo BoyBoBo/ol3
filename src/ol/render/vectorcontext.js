@@ -8,8 +8,7 @@ goog.provide('ol.render.VectorContext');
  * @struct
  * @api
  */
-ol.render.VectorContext = function() {
-};
+ol.render.VectorContext = function() {};
 
 
 /**
@@ -40,6 +39,14 @@ ol.render.VectorContext.prototype.drawCircle = function(circleGeometry, feature)
 
 /**
  * @abstract
+ * @param {ol.geom.Ellipse} ellipseGeometry Ellipse geometry.
+ * @param {ol.Feature} feature Feature,
+ */
+ol.render.VectorContext.prototype.drawEllipse = function(ellipseGeometry,
+  feature) {};
+
+/**
+ * @abstract
  * @param {ol.Feature} feature Feature.
  * @param {ol.style.Style} style Style.
  */
@@ -52,7 +59,8 @@ ol.render.VectorContext.prototype.drawFeature = function(feature, style) {};
  *     collection.
  * @param {ol.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawGeometryCollection = function(geometryCollectionGeometry, feature) {};
+ol.render.VectorContext.prototype.drawGeometryCollection = function(
+  geometryCollectionGeometry, feature) {};
 
 
 /**
@@ -61,7 +69,8 @@ ol.render.VectorContext.prototype.drawGeometryCollection = function(geometryColl
  *     string geometry.
  * @param {ol.Feature|ol.render.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawLineString = function(lineStringGeometry, feature) {};
+ol.render.VectorContext.prototype.drawLineString = function(lineStringGeometry,
+  feature) {};
 
 
 /**
@@ -70,7 +79,8 @@ ol.render.VectorContext.prototype.drawLineString = function(lineStringGeometry, 
  *     MultiLineString geometry.
  * @param {ol.Feature|ol.render.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawMultiLineString = function(multiLineStringGeometry, feature) {};
+ol.render.VectorContext.prototype.drawMultiLineString = function(
+  multiLineStringGeometry, feature) {};
 
 
 /**
@@ -79,7 +89,8 @@ ol.render.VectorContext.prototype.drawMultiLineString = function(multiLineString
  *     geometry.
  * @param {ol.Feature|ol.render.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawMultiPoint = function(multiPointGeometry, feature) {};
+ol.render.VectorContext.prototype.drawMultiPoint = function(multiPointGeometry,
+  feature) {};
 
 
 /**
@@ -87,7 +98,8 @@ ol.render.VectorContext.prototype.drawMultiPoint = function(multiPointGeometry, 
  * @param {ol.geom.MultiPolygon} multiPolygonGeometry MultiPolygon geometry.
  * @param {ol.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {};
+ol.render.VectorContext.prototype.drawMultiPolygon = function(
+  multiPolygonGeometry, feature) {};
 
 
 /**
@@ -104,7 +116,8 @@ ol.render.VectorContext.prototype.drawPoint = function(pointGeometry, feature) {
  *     geometry.
  * @param {ol.Feature|ol.render.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawPolygon = function(polygonGeometry, feature) {};
+ol.render.VectorContext.prototype.drawPolygon = function(polygonGeometry,
+  feature) {};
 
 
 /**
@@ -116,7 +129,8 @@ ol.render.VectorContext.prototype.drawPolygon = function(polygonGeometry, featur
  * @param {ol.geom.Geometry|ol.render.Feature} geometry Geometry.
  * @param {ol.Feature|ol.render.Feature} feature Feature.
  */
-ol.render.VectorContext.prototype.drawText = function(flatCoordinates, offset, end, stride, geometry, feature) {};
+ol.render.VectorContext.prototype.drawText = function(flatCoordinates, offset,
+  end, stride, geometry, feature) {};
 
 
 /**
@@ -124,7 +138,8 @@ ol.render.VectorContext.prototype.drawText = function(flatCoordinates, offset, e
  * @param {ol.style.Fill} fillStyle Fill style.
  * @param {ol.style.Stroke} strokeStyle Stroke style.
  */
-ol.render.VectorContext.prototype.setFillStrokeStyle = function(fillStyle, strokeStyle) {};
+ol.render.VectorContext.prototype.setFillStrokeStyle = function(fillStyle,
+  strokeStyle) {};
 
 
 /**

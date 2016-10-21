@@ -19,9 +19,11 @@ goog.require('ol.render.canvas.Replay');
  * @param {boolean} overlaps The replay can have overlapping geometries.
  * @struct
  */
-ol.render.canvas.PolygonReplay = function(tolerance, maxExtent, resolution, overlaps) {
+ol.render.canvas.PolygonReplay = function(tolerance, maxExtent, resolution,
+  overlaps) {
 
-  ol.render.canvas.Replay.call(this, tolerance, maxExtent, resolution, overlaps);
+  ol.render.canvas.Replay.call(this, tolerance, maxExtent, resolution,
+    overlaps);
 
   /**
    * @private
@@ -75,7 +77,8 @@ ol.inherits(ol.render.canvas.PolygonReplay, ol.render.canvas.Replay);
  * @private
  * @return {number} End.
  */
-ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCoordinates, offset, ends, stride) {
+ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(
+  flatCoordinates, offset, ends, stride) {
   var state = this.state_;
   var fill = state.fillStyle !== undefined;
   var stroke = state.strokeStyle != undefined;
@@ -87,9 +90,10 @@ ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCo
     var end = ends[i];
     var myBegin = this.coordinates.length;
     var myEnd = this.appendFlatCoordinates(
-        flatCoordinates, offset, end, stride, true, !stroke);
-    var moveToLineToInstruction =
-        [ol.render.canvas.Instruction.MOVE_TO_LINE_TO, myBegin, myEnd];
+      flatCoordinates, offset, end, stride, true, !stroke);
+    var moveToLineToInstruction = [ol.render.canvas.Instruction.MOVE_TO_LINE_TO,
+      myBegin, myEnd
+    ];
     this.instructions.push(moveToLineToInstruction);
     this.hitDetectionInstructions.push(moveToLineToInstruction);
     if (stroke) {
@@ -108,7 +112,7 @@ ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCo
   }
   if (stroke) {
     ol.DEBUG && console.assert(state.lineWidth !== undefined,
-        'state.lineWidth should be defined');
+      'state.lineWidth should be defined');
     var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
     this.instructions.push(strokeInstruction);
     this.hitDetectionInstructions.push(strokeInstruction);
@@ -120,7 +124,8 @@ ol.render.canvas.PolygonReplay.prototype.drawFlatCoordinatess_ = function(flatCo
 /**
  * @inheritDoc
  */
-ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, feature) {
+ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry,
+  feature) {
   var state = this.state_;
   ol.DEBUG && console.assert(state, 'state should not be null');
   var fillStyle = state.fillStyle;
@@ -130,25 +135,27 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   }
   if (strokeStyle !== undefined) {
     ol.DEBUG && console.assert(state.lineWidth !== undefined,
-        'state.lineWidth should be defined');
+      'state.lineWidth should be defined');
   }
   this.setFillStrokeStyles_();
   this.beginGeometry(circleGeometry, feature);
   // always fill the circle for hit detection
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE,
-       ol.color.asString(ol.render.canvas.defaultFillStyle)]);
+    [ol.render.canvas.Instruction.SET_FILL_STYLE,
+      ol.color.asString(ol.render.canvas.defaultFillStyle)
+    ]);
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push(
-        [ol.render.canvas.Instruction.SET_STROKE_STYLE,
-         state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-         state.miterLimit, state.lineDash]);
+      [ol.render.canvas.Instruction.SET_STROKE_STYLE,
+        state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
+        state.miterLimit, state.lineDash
+      ]);
   }
   var flatCoordinates = circleGeometry.getFlatCoordinates();
   var stride = circleGeometry.getStride();
   var myBegin = this.coordinates.length;
   this.appendFlatCoordinates(
-      flatCoordinates, 0, flatCoordinates.length, stride, false, false);
+    flatCoordinates, 0, flatCoordinates.length, stride, false, false);
   var beginPathInstruction = [ol.render.canvas.Instruction.BEGIN_PATH];
   var circleInstruction = [ol.render.canvas.Instruction.CIRCLE, myBegin];
   this.instructions.push(beginPathInstruction, circleInstruction);
@@ -160,7 +167,7 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   }
   if (state.strokeStyle !== undefined) {
     ol.DEBUG && console.assert(state.lineWidth !== undefined,
-        'state.lineWidth should be defined');
+      'state.lineWidth should be defined');
     var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
     this.instructions.push(strokeInstruction);
     this.hitDetectionInstructions.push(strokeInstruction);
@@ -168,44 +175,11 @@ ol.render.canvas.PolygonReplay.prototype.drawCircle = function(circleGeometry, f
   this.endGeometry(circleGeometry, feature);
 };
 
-
 /**
  * @inheritDoc
  */
-ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry, feature) {
-  var state = this.state_;
-  ol.DEBUG && console.assert(state, 'state should not be null');
-  var strokeStyle = state.strokeStyle;
-  ol.DEBUG && console.assert(state.fillStyle !== undefined || strokeStyle !== undefined,
-      'fillStyle or strokeStyle should be defined');
-  if (strokeStyle !== undefined) {
-    ol.DEBUG && console.assert(state.lineWidth !== undefined,
-        'state.lineWidth should be defined');
-  }
-  this.setFillStrokeStyles_();
-  this.beginGeometry(polygonGeometry, feature);
-  // always fill the polygon for hit detection
-  this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE,
-       ol.color.asString(ol.render.canvas.defaultFillStyle)]);
-  if (state.strokeStyle !== undefined) {
-    this.hitDetectionInstructions.push(
-        [ol.render.canvas.Instruction.SET_STROKE_STYLE,
-         state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-         state.miterLimit, state.lineDash]);
-  }
-  var ends = polygonGeometry.getEnds();
-  var flatCoordinates = polygonGeometry.getOrientedFlatCoordinates();
-  var stride = polygonGeometry.getStride();
-  this.drawFlatCoordinatess_(flatCoordinates, 0, ends, stride);
-  this.endGeometry(polygonGeometry, feature);
-};
-
-
-/**
- * @inheritDoc
- */
-ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygonGeometry, feature) {
+ol.render.canvas.PolygonReplay.prototype.drawEllipse = function(ellipseGeometry,
+  feature) {
   var state = this.state_;
   ol.DEBUG && console.assert(state, 'state should not be null');
   var fillStyle = state.fillStyle;
@@ -215,19 +189,113 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
   }
   if (strokeStyle !== undefined) {
     ol.DEBUG && console.assert(state.lineWidth !== undefined,
-        'state.lineWidth should be defined');
+      'state.lineWidth should be defined');
+  }
+  this.setFillStrokeStyles_();
+  this.beginGeometry(ellipseGeometry, feature);
+  // always fill the ellipse for hit detection
+  this.hitDetectionInstructions.push(
+    [ol.render.canvas.Instruction.SET_FILL_STYLE,
+      ol.color.asString(ol.render.canvas.defaultFillStyle)
+    ]);
+  if (state.strokeStyle !== undefined) {
+    this.hitDetectionInstructions.push(
+      [ol.render.canvas.Instruction.SET_STROKE_STYLE,
+        state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
+        state.miterLimit, state.lineDash
+      ]);
+  }
+  var flatCoordinates = ellipseGeometry.getFlatCoordinates();
+  var stride = ellipseGeometry.getStride();
+  var myBegin = this.coordinates.length;
+  this.appendFlatCoordinates(
+    flatCoordinates, 0, flatCoordinates.length, stride, false, false);
+  var beginPathInstruction = [ol.render.canvas.Instruction.BEGIN_PATH];
+  var ellipseInstruction = [ol.render.canvas.Instruction.ELLIPSE, myBegin];
+  this.instructions.push(beginPathInstruction, ellipseInstruction);
+  this.hitDetectionInstructions.push(beginPathInstruction, ellipseInstruction);
+  var fillInstruction = [ol.render.canvas.Instruction.FILL];
+  this.hitDetectionInstructions.push(fillInstruction);
+  if (state.fillStyle !== undefined) {
+    this.instructions.push(fillInstruction);
+  }
+  if (state.strokeStyle !== undefined) {
+    ol.DEBUG && console.assert(state.lineWidth !== undefined,
+      'state.lineWidth should be defined');
+    var strokeInstruction = [ol.render.canvas.Instruction.STROKE];
+    this.instructions.push(strokeInstruction);
+    this.hitDetectionInstructions.push(strokeInstruction);
+  }
+  this.endGeometry(ellipseGeometry, feature);
+};
+
+/**
+ * @inheritDoc
+ */
+ol.render.canvas.PolygonReplay.prototype.drawPolygon = function(polygonGeometry,
+  feature) {
+  var state = this.state_;
+  ol.DEBUG && console.assert(state, 'state should not be null');
+  var strokeStyle = state.strokeStyle;
+  ol.DEBUG && console.assert(state.fillStyle !== undefined || strokeStyle !==
+    undefined,
+    'fillStyle or strokeStyle should be defined');
+  if (strokeStyle !== undefined) {
+    ol.DEBUG && console.assert(state.lineWidth !== undefined,
+      'state.lineWidth should be defined');
+  }
+  this.setFillStrokeStyles_();
+  this.beginGeometry(polygonGeometry, feature);
+  // always fill the polygon for hit detection
+  this.hitDetectionInstructions.push(
+    [ol.render.canvas.Instruction.SET_FILL_STYLE,
+      ol.color.asString(ol.render.canvas.defaultFillStyle)
+    ]);
+  if (state.strokeStyle !== undefined) {
+    this.hitDetectionInstructions.push(
+      [ol.render.canvas.Instruction.SET_STROKE_STYLE,
+        state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
+        state.miterLimit, state.lineDash
+      ]);
+  }
+  var ends = polygonGeometry.getEnds();
+  var flatCoordinates = polygonGeometry.getOrientedFlatCoordinates();
+  console.log(flatCoordinates);
+  var stride = polygonGeometry.getStride();
+  this.drawFlatCoordinatess_(flatCoordinates, 0, ends, stride);
+  this.endGeometry(polygonGeometry, feature);
+};
+
+
+/**
+ * @inheritDoc
+ */
+ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(
+  multiPolygonGeometry, feature) {
+  var state = this.state_;
+  ol.DEBUG && console.assert(state, 'state should not be null');
+  var fillStyle = state.fillStyle;
+  var strokeStyle = state.strokeStyle;
+  if (fillStyle === undefined && strokeStyle === undefined) {
+    return;
+  }
+  if (strokeStyle !== undefined) {
+    ol.DEBUG && console.assert(state.lineWidth !== undefined,
+      'state.lineWidth should be defined');
   }
   this.setFillStrokeStyles_();
   this.beginGeometry(multiPolygonGeometry, feature);
   // always fill the multi-polygon for hit detection
   this.hitDetectionInstructions.push(
-      [ol.render.canvas.Instruction.SET_FILL_STYLE,
-       ol.color.asString(ol.render.canvas.defaultFillStyle)]);
+    [ol.render.canvas.Instruction.SET_FILL_STYLE,
+      ol.color.asString(ol.render.canvas.defaultFillStyle)
+    ]);
   if (state.strokeStyle !== undefined) {
     this.hitDetectionInstructions.push(
-        [ol.render.canvas.Instruction.SET_STROKE_STYLE,
-         state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
-         state.miterLimit, state.lineDash]);
+      [ol.render.canvas.Instruction.SET_STROKE_STYLE,
+        state.strokeStyle, state.lineWidth, state.lineCap, state.lineJoin,
+        state.miterLimit, state.lineDash
+      ]);
   }
   var endss = multiPolygonGeometry.getEndss();
   var flatCoordinates = multiPolygonGeometry.getOrientedFlatCoordinates();
@@ -236,7 +304,7 @@ ol.render.canvas.PolygonReplay.prototype.drawMultiPolygon = function(multiPolygo
   var i, ii;
   for (i = 0, ii = endss.length; i < ii; ++i) {
     offset = this.drawFlatCoordinatess_(
-        flatCoordinates, offset, endss[i], stride);
+      flatCoordinates, offset, endss[i], stride);
   }
   this.endGeometry(multiPolygonGeometry, feature);
 };
@@ -282,37 +350,38 @@ ol.render.canvas.PolygonReplay.prototype.getBufferedMaxExtent = function() {
 /**
  * @inheritDoc
  */
-ol.render.canvas.PolygonReplay.prototype.setFillStrokeStyle = function(fillStyle, strokeStyle) {
+ol.render.canvas.PolygonReplay.prototype.setFillStrokeStyle = function(
+  fillStyle, strokeStyle) {
   ol.DEBUG && console.assert(this.state_, 'this.state_ should not be null');
   ol.DEBUG && console.assert(fillStyle || strokeStyle,
-      'fillStyle or strokeStyle should not be null');
+    'fillStyle or strokeStyle should not be null');
   var state = this.state_;
   if (fillStyle) {
     var fillStyleColor = fillStyle.getColor();
     state.fillStyle = ol.colorlike.asColorLike(fillStyleColor ?
-        fillStyleColor : ol.render.canvas.defaultFillStyle);
+      fillStyleColor : ol.render.canvas.defaultFillStyle);
   } else {
     state.fillStyle = undefined;
   }
   if (strokeStyle) {
     var strokeStyleColor = strokeStyle.getColor();
     state.strokeStyle = ol.colorlike.asColorLike(strokeStyleColor ?
-        strokeStyleColor : ol.render.canvas.defaultStrokeStyle);
+      strokeStyleColor : ol.render.canvas.defaultStrokeStyle);
     var strokeStyleLineCap = strokeStyle.getLineCap();
     state.lineCap = strokeStyleLineCap !== undefined ?
-        strokeStyleLineCap : ol.render.canvas.defaultLineCap;
+      strokeStyleLineCap : ol.render.canvas.defaultLineCap;
     var strokeStyleLineDash = strokeStyle.getLineDash();
     state.lineDash = strokeStyleLineDash ?
-        strokeStyleLineDash.slice() : ol.render.canvas.defaultLineDash;
+      strokeStyleLineDash.slice() : ol.render.canvas.defaultLineDash;
     var strokeStyleLineJoin = strokeStyle.getLineJoin();
     state.lineJoin = strokeStyleLineJoin !== undefined ?
-        strokeStyleLineJoin : ol.render.canvas.defaultLineJoin;
+      strokeStyleLineJoin : ol.render.canvas.defaultLineJoin;
     var strokeStyleWidth = strokeStyle.getWidth();
     state.lineWidth = strokeStyleWidth !== undefined ?
-        strokeStyleWidth : ol.render.canvas.defaultLineWidth;
+      strokeStyleWidth : ol.render.canvas.defaultLineWidth;
     var strokeStyleMiterLimit = strokeStyle.getMiterLimit();
     state.miterLimit = strokeStyleMiterLimit !== undefined ?
-        strokeStyleMiterLimit : ol.render.canvas.defaultMiterLimit;
+      strokeStyleMiterLimit : ol.render.canvas.defaultMiterLimit;
 
     if (state.lineWidth > this.maxLineWidth) {
       this.maxLineWidth = state.lineWidth;
@@ -344,25 +413,31 @@ ol.render.canvas.PolygonReplay.prototype.setFillStrokeStyles_ = function() {
   var miterLimit = state.miterLimit;
   if (fillStyle !== undefined && state.currentFillStyle != fillStyle) {
     this.instructions.push(
-        [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle, typeof fillStyle != 'string']);
+      [ol.render.canvas.Instruction.SET_FILL_STYLE, fillStyle, typeof fillStyle !=
+        'string'
+      ]);
     state.currentFillStyle = state.fillStyle;
   }
   if (strokeStyle !== undefined) {
-    ol.DEBUG && console.assert(lineCap !== undefined, 'lineCap should be defined');
+    ol.DEBUG && console.assert(lineCap !== undefined,
+      'lineCap should be defined');
     ol.DEBUG && console.assert(lineDash, 'lineDash should not be null');
-    ol.DEBUG && console.assert(lineJoin !== undefined, 'lineJoin should be defined');
-    ol.DEBUG && console.assert(lineWidth !== undefined, 'lineWidth should be defined');
+    ol.DEBUG && console.assert(lineJoin !== undefined,
+      'lineJoin should be defined');
+    ol.DEBUG && console.assert(lineWidth !== undefined,
+      'lineWidth should be defined');
     ol.DEBUG && console.assert(miterLimit !== undefined,
-        'miterLimit should be defined');
+      'miterLimit should be defined');
     if (state.currentStrokeStyle != strokeStyle ||
-        state.currentLineCap != lineCap ||
-        state.currentLineDash != lineDash ||
-        state.currentLineJoin != lineJoin ||
-        state.currentLineWidth != lineWidth ||
-        state.currentMiterLimit != miterLimit) {
+      state.currentLineCap != lineCap ||
+      state.currentLineDash != lineDash ||
+      state.currentLineJoin != lineJoin ||
+      state.currentLineWidth != lineWidth ||
+      state.currentMiterLimit != miterLimit) {
       this.instructions.push(
-          [ol.render.canvas.Instruction.SET_STROKE_STYLE,
-           strokeStyle, lineWidth, lineCap, lineJoin, miterLimit, lineDash]);
+        [ol.render.canvas.Instruction.SET_STROKE_STYLE,
+          strokeStyle, lineWidth, lineCap, lineJoin, miterLimit, lineDash
+        ]);
       state.currentStrokeStyle = strokeStyle;
       state.currentLineCap = lineCap;
       state.currentLineDash = lineDash;

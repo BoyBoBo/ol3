@@ -26,7 +26,7 @@ goog.require('ol.transform');
  * @struct
  */
 ol.render.canvas.ReplayGroup = function(
-    tolerance, maxExtent, resolution, overlaps, opt_renderBuffer) {
+  tolerance, maxExtent, resolution, overlaps, opt_renderBuffer) {
   ol.render.ReplayGroup.call(this);
 
   /**
@@ -109,13 +109,12 @@ ol.render.canvas.ReplayGroup.prototype.finish = function() {
  * @template T
  */
 ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate = function(
-    coordinate, resolution, rotation, skippedFeaturesHash, callback) {
+  coordinate, resolution, rotation, skippedFeaturesHash, callback) {
 
   var transform = ol.transform.compose(this.hitDetectionTransform_,
-      0.5, 0.5,
-      1 / resolution, -1 / resolution,
-      -rotation,
-      -coordinate[0], -coordinate[1]);
+    0.5, 0.5,
+    1 / resolution, -1 / resolution, -rotation, -coordinate[0], -coordinate[
+      1]);
 
   var context = this.hitDetectionContext_;
   context.clearRect(0, 0, 1, 1);
@@ -131,21 +130,21 @@ ol.render.canvas.ReplayGroup.prototype.forEachFeatureAtCoordinate = function(
   }
 
   return this.replayHitDetection_(context, transform, rotation,
-      skippedFeaturesHash,
-      /**
-       * @param {ol.Feature|ol.render.Feature} feature Feature.
-       * @return {?} Callback result.
-       */
-      function(feature) {
-        var imageData = context.getImageData(0, 0, 1, 1).data;
-        if (imageData[3] > 0) {
-          var result = callback(feature);
-          if (result) {
-            return result;
-          }
-          context.clearRect(0, 0, 1, 1);
+    skippedFeaturesHash,
+    /**
+     * @param {ol.Feature|ol.render.Feature} feature Feature.
+     * @return {?} Callback result.
+     */
+    function(feature) {
+      var imageData = context.getImageData(0, 0, 1, 1).data;
+      if (imageData[3] > 0) {
+        var result = callback(feature);
+        if (result) {
+          return result;
         }
-      }, hitExtent);
+        context.clearRect(0, 0, 1, 1);
+      }
+    }, hitExtent);
 };
 
 
@@ -161,12 +160,14 @@ ol.render.canvas.ReplayGroup.prototype.getReplay = function(zIndex, replayType) 
   }
   var replay = replays[replayType];
   if (replay === undefined) {
-    var Constructor = ol.render.canvas.ReplayGroup.BATCH_CONSTRUCTORS_[replayType];
+    var Constructor = ol.render.canvas.ReplayGroup.BATCH_CONSTRUCTORS_[
+      replayType];
     ol.DEBUG && console.assert(Constructor !== undefined,
-        replayType +
-        ' constructor missing from ol.render.canvas.ReplayGroup.BATCH_CONSTRUCTORS_');
+      replayType +
+      ' constructor missing from ol.render.canvas.ReplayGroup.BATCH_CONSTRUCTORS_'
+    );
     replay = new Constructor(this.tolerance_, this.maxExtent_,
-        this.resolution_, this.overlaps_);
+      this.resolution_, this.overlaps_);
     replays[replayType] = replay;
   }
   return replay;
@@ -192,7 +193,7 @@ ol.render.canvas.ReplayGroup.prototype.isEmpty = function() {
  *     to replay. Default is {@link ol.render.replay.ORDER}
  */
 ol.render.canvas.ReplayGroup.prototype.replay = function(context, pixelRatio,
-    transform, viewRotation, skippedFeaturesHash, opt_replayTypes) {
+  transform, viewRotation, skippedFeaturesHash, opt_replayTypes) {
 
   /** @type {Array.<number>} */
   var zs = Object.keys(this.replaysByZIndex_).map(Number);
@@ -207,7 +208,7 @@ ol.render.canvas.ReplayGroup.prototype.replay = function(context, pixelRatio,
   var maxY = maxExtent[3];
   var flatClipCoords = [minX, minY, minX, maxY, maxX, maxY, maxX, minY];
   ol.geom.flat.transform.transform2D(
-      flatClipCoords, 0, 8, 2, transform, flatClipCoords);
+    flatClipCoords, 0, 8, 2, transform, flatClipCoords);
   context.save();
   context.beginPath();
   context.moveTo(flatClipCoords[0], flatClipCoords[1]);
@@ -224,7 +225,7 @@ ol.render.canvas.ReplayGroup.prototype.replay = function(context, pixelRatio,
       replay = replays[replayTypes[j]];
       if (replay !== undefined) {
         replay.replay(context, pixelRatio, transform, viewRotation,
-            skippedFeaturesHash);
+          skippedFeaturesHash);
       }
     }
   }
@@ -248,8 +249,8 @@ ol.render.canvas.ReplayGroup.prototype.replay = function(context, pixelRatio,
  * @template T
  */
 ol.render.canvas.ReplayGroup.prototype.replayHitDetection_ = function(
-    context, transform, viewRotation, skippedFeaturesHash,
-    featureCallback, opt_hitExtent) {
+  context, transform, viewRotation, skippedFeaturesHash,
+  featureCallback, opt_hitExtent) {
   /** @type {Array.<number>} */
   var zs = Object.keys(this.replaysByZIndex_).map(Number);
   zs.sort(function(a, b) {
@@ -263,7 +264,7 @@ ol.render.canvas.ReplayGroup.prototype.replayHitDetection_ = function(
       replay = replays[ol.render.replay.ORDER[j]];
       if (replay !== undefined) {
         result = replay.replayHitDetection(context, transform, viewRotation,
-            skippedFeaturesHash, featureCallback, opt_hitExtent);
+          skippedFeaturesHash, featureCallback, opt_hitExtent);
         if (result) {
           return result;
         }

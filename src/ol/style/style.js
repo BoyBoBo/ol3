@@ -224,7 +224,7 @@ ol.style.Style.createFunction = function(obj) {
       styles = obj;
     } else {
       ol.asserts.assert(obj instanceof ol.style.Style,
-          41); // Expected an `ol.style.Style` or an array of `ol.style.Style`
+        41); // Expected an `ol.style.Style` or an array of `ol.style.Style`
       styles = [obj];
     }
     styleFunction = function() {
@@ -295,7 +295,7 @@ ol.style.Style.createDefaultEditing = function() {
     })
   ];
   styles[ol.geom.GeometryType.MULTI_POLYGON] =
-      styles[ol.geom.GeometryType.POLYGON];
+    styles[ol.geom.GeometryType.POLYGON];
 
   styles[ol.geom.GeometryType.LINE_STRING] = [
     new ol.style.Style({
@@ -312,14 +312,17 @@ ol.style.Style.createDefaultEditing = function() {
     })
   ];
   styles[ol.geom.GeometryType.MULTI_LINE_STRING] =
-      styles[ol.geom.GeometryType.LINE_STRING];
+    styles[ol.geom.GeometryType.LINE_STRING];
 
   styles[ol.geom.GeometryType.CIRCLE] =
-      styles[ol.geom.GeometryType.POLYGON].concat(
-          styles[ol.geom.GeometryType.LINE_STRING]
-      );
+    styles[ol.geom.GeometryType.POLYGON].concat(
+      styles[ol.geom.GeometryType.LINE_STRING]
+    );
 
-
+  styles[ol.geom.GeometryType.ELLIPSE] =
+    styles[ol.geom.GeometryType.POLYGON].concat(
+      styles[ol.geom.GeometryType.LINE_STRING]
+    );
   styles[ol.geom.GeometryType.POINT] = [
     new ol.style.Style({
       image: new ol.style.Circle({
@@ -336,13 +339,13 @@ ol.style.Style.createDefaultEditing = function() {
     })
   ];
   styles[ol.geom.GeometryType.MULTI_POINT] =
-      styles[ol.geom.GeometryType.POINT];
+    styles[ol.geom.GeometryType.POINT];
 
   styles[ol.geom.GeometryType.GEOMETRY_COLLECTION] =
-      styles[ol.geom.GeometryType.POLYGON].concat(
-          styles[ol.geom.GeometryType.LINE_STRING],
-          styles[ol.geom.GeometryType.POINT]
-      );
+    styles[ol.geom.GeometryType.POLYGON].concat(
+      styles[ol.geom.GeometryType.LINE_STRING],
+      styles[ol.geom.GeometryType.POINT]
+    );
 
   return styles;
 };

@@ -1,4 +1,4 @@
-goog.provide('ol.geom.Circle');
+goog.provide('ol.geom.Ellipse');
 
 goog.require('ol');
 goog.require('ol.extent');
@@ -10,7 +10,7 @@ goog.require('ol.geom.flat.deflate');
 
 /**
  * @classdesc
- * Circle geometry.
+ * Ellipse geometry.
  *
  * @constructor
  * @extends {ol.geom.SimpleGeometry}
@@ -19,30 +19,30 @@ goog.require('ol.geom.flat.deflate');
  * @param {ol.geom.GeometryLayout=} opt_layout Layout.
  * @api
  */
-ol.geom.Circle = function(center, opt_radius, opt_layout) {
+ol.geom.Ellipse = function(center, opt_radius, opt_layout) {
   ol.geom.SimpleGeometry.call(this);
   var radius = opt_radius ? opt_radius : 0;
   this.setCenterAndRadius(center, radius, opt_layout);
 };
-ol.inherits(ol.geom.Circle, ol.geom.SimpleGeometry);
+ol.inherits(ol.geom.Ellipse, ol.geom.SimpleGeometry);
 
 
 /**
  * Make a complete copy of the geometry.
- * @return {!ol.geom.Circle} Clone.
+ * @return {!ol.geom.Ellipse} Clone.
  * @api
  */
-ol.geom.Circle.prototype.clone = function() {
-  var circle = new ol.geom.Circle(null);
-  circle.setFlatCoordinates(this.layout, this.flatCoordinates.slice());
-  return circle;
+ol.geom.Ellipse.prototype.clone = function() {
+  var ellipse = new ol.geom.Ellipse(null);
+  ellipse.setFlatCoordinates(this.layout, this.flatCoordinates.slice());
+  return ellipse;
 };
 
 
 /**
  * @inheritDoc
  */
-ol.geom.Circle.prototype.closestPointXY = function(x, y, closestPoint,
+ol.geom.Ellipse.prototype.closestPointXY = function(x, y, closestPoint,
   minSquaredDistance) {
   var flatCoordinates = this.flatCoordinates;
   var dx = x - flatCoordinates[0];
@@ -73,7 +73,7 @@ ol.geom.Circle.prototype.closestPointXY = function(x, y, closestPoint,
 /**
  * @inheritDoc
  */
-ol.geom.Circle.prototype.containsXY = function(x, y) {
+ol.geom.Ellipse.prototype.containsXY = function(x, y) {
   var flatCoordinates = this.flatCoordinates;
   var dx = x - flatCoordinates[0];
   var dy = y - flatCoordinates[1];
@@ -82,11 +82,11 @@ ol.geom.Circle.prototype.containsXY = function(x, y) {
 
 
 /**
- * Return the center of the circle as {@link ol.Coordinate coordinate}.
+ * Return the center of the ellipse as {@link ol.Coordinate coordinate}.
  * @return {ol.Coordinate} Center.
  * @api
  */
-ol.geom.Circle.prototype.getCenter = function() {
+ol.geom.Ellipse.prototype.getCenter = function() {
   return this.flatCoordinates.slice(0, this.stride);
 };
 
@@ -94,7 +94,7 @@ ol.geom.Circle.prototype.getCenter = function() {
 /**
  * @inheritDoc
  */
-ol.geom.Circle.prototype.computeExtent = function(extent) {
+ol.geom.Ellipse.prototype.computeExtent = function(extent) {
   var flatCoordinates = this.flatCoordinates;
   var radius = flatCoordinates[this.stride] - flatCoordinates[0];
   return ol.extent.createOrUpdate(
@@ -105,11 +105,11 @@ ol.geom.Circle.prototype.computeExtent = function(extent) {
 
 
 /**
- * Return the radius of the circle.
+ * Return the radius of the ellipse.
  * @return {number} Radius.
  * @api
  */
-ol.geom.Circle.prototype.getRadius = function() {
+ol.geom.Ellipse.prototype.getRadius = function() {
   return Math.sqrt(this.getRadiusSquared_());
 };
 
@@ -118,7 +118,7 @@ ol.geom.Circle.prototype.getRadius = function() {
  * @private
  * @return {number} Radius squared.
  */
-ol.geom.Circle.prototype.getRadiusSquared_ = function() {
+ol.geom.Ellipse.prototype.getRadiusSquared_ = function() {
   var dx = this.flatCoordinates[this.stride] - this.flatCoordinates[0];
   var dy = this.flatCoordinates[this.stride + 1] - this.flatCoordinates[1];
   return dx * dx + dy * dy;
@@ -129,8 +129,8 @@ ol.geom.Circle.prototype.getRadiusSquared_ = function() {
  * @inheritDoc
  * @api
  */
-ol.geom.Circle.prototype.getType = function() {
-  return ol.geom.GeometryType.CIRCLE;
+ol.geom.Ellipse.prototype.getType = function() {
+  return ol.geom.GeometryType.ELLIPSE;
 };
 
 
@@ -138,9 +138,9 @@ ol.geom.Circle.prototype.getType = function() {
  * @inheritDoc
  * @api stable
  */
-ol.geom.Circle.prototype.intersectsExtent = function(extent) {
-  var circleExtent = this.getExtent();
-  if (ol.extent.intersects(extent, circleExtent)) {
+ol.geom.Ellipse.prototype.intersectsExtent = function(extent) {
+  var ellipseExtent = this.getExtent();
+  if (ol.extent.intersects(extent, ellipseExtent)) {
     var center = this.getCenter();
 
     if (extent[0] <= center[0] && extent[2] >= center[0]) {
@@ -158,11 +158,11 @@ ol.geom.Circle.prototype.intersectsExtent = function(extent) {
 
 
 /**
- * Set the center of the circle as {@link ol.Coordinate coordinate}.
+ * Set the center of the ellipse as {@link ol.Coordinate coordinate}.
  * @param {ol.Coordinate} center Center.
  * @api
  */
-ol.geom.Circle.prototype.setCenter = function(center) {
+ol.geom.Ellipse.prototype.setCenter = function(center) {
   var stride = this.stride;
   ol.DEBUG && console.assert(center.length == stride,
     'center array length should match stride');
@@ -179,13 +179,13 @@ ol.geom.Circle.prototype.setCenter = function(center) {
 
 /**
  * Set the center (as {@link ol.Coordinate coordinate}) and the radius (as
- * number) of the circle.
+ * number) of the ellipse.
  * @param {ol.Coordinate} center Center.
  * @param {number} radius Radius.
  * @param {ol.geom.GeometryLayout=} opt_layout Layout.
  * @api
  */
-ol.geom.Circle.prototype.setCenterAndRadius = function(center, radius,
+ol.geom.Ellipse.prototype.setCenterAndRadius = function(center, radius,
   opt_layout) {
   if (!center) {
     this.setFlatCoordinates(ol.geom.GeometryLayout.XY, null);
@@ -213,43 +213,43 @@ ol.geom.Circle.prototype.setCenterAndRadius = function(center, radius,
  * @param {ol.geom.GeometryLayout} layout Layout.
  * @param {Array.<number>} flatCoordinates Flat coordinates.
  */
-ol.geom.Circle.prototype.setFlatCoordinates = function(layout, flatCoordinates) {
+ol.geom.Ellipse.prototype.setFlatCoordinates = function(layout, flatCoordinates) {
   this.setFlatCoordinatesInternal(layout, flatCoordinates);
   this.changed();
 };
 
 
 /**
- * Set the radius of the circle. The radius is in the units of the projection.
+ * Set the radius of the ellipse. The radius is in the units of the projection.
  * @param {number} radius Radius.
  * @api
  */
-ol.geom.Circle.prototype.setRadius = function(radius) {
+ol.geom.Ellipse.prototype.setRadius = function(radius) {
   this.flatCoordinates[this.stride] = this.flatCoordinates[0] + radius;
   this.changed();
 };
 
 
 /**
- * Transform each coordinate of the circle from one coordinate reference system
+ * Transform each coordinate of the ellipse from one coordinate reference system
  * to another. The geometry is modified in place.
  * If you do not want the geometry modified in place, first clone() it and
  * then use this function on the clone.
  *
- * Internally a circle is currently represented by two points: the center of
- * the circle `[cx, cy]`, and the point to the right of the circle
+ * Internally a ellipse is currently represented by two points: the center of
+ * the ellipse `[cx, cy]`, and the point to the right of the ellipse
  * `[cx + r, cy]`. This `transform` function just transforms these two points.
- * So the resulting geometry is also a circle, and that circle does not
+ * So the resulting geometry is also a ellipse, and that ellipse does not
  * correspond to the shape that would be obtained by transforming every point
- * of the original circle.
+ * of the original ellipse.
  *
  * @param {ol.ProjectionLike} source The current projection.  Can be a
  *     string identifier or a {@link ol.proj.Projection} object.
  * @param {ol.ProjectionLike} destination The desired projection.  Can be a
  *     string identifier or a {@link ol.proj.Projection} object.
- * @return {ol.geom.Circle} This geometry.  Note that original geometry is
+ * @return {ol.geom.Ellipse} This geometry.  Note that original geometry is
  *     modified in place.
  * @function
  * @api stable
  */
-ol.geom.Circle.prototype.transform;
+ol.geom.Ellipse.prototype.transform;

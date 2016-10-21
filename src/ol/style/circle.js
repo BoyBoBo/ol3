@@ -101,7 +101,7 @@ ol.style.Circle = function(opt_options) {
    * @type {boolean}
    */
   var snapToPixel = options.snapToPixel !== undefined ?
-      options.snapToPixel : true;
+    options.snapToPixel : true;
 
   ol.style.Image.call(this, {
     opacity: 1,
@@ -316,13 +316,13 @@ ol.style.Circle.prototype.render_ = function(atlasManager) {
     if (hasCustomHitDetectionImage) {
       // render the hit-detection image into a separate atlas image
       renderHitDetectionCallback =
-          this.drawHitDetectionCanvas_.bind(this, renderOptions);
+        this.drawHitDetectionCanvas_.bind(this, renderOptions);
     }
 
     var id = this.getChecksum();
     var info = atlasManager.add(
-        id, size, size, this.draw_.bind(this, renderOptions),
-        renderHitDetectionCallback);
+      id, size, size, this.draw_.bind(this, renderOptions),
+      renderHitDetectionCallback);
     ol.DEBUG && console.assert(info, 'circle radius is too large');
 
     this.canvas_ = info.image;
@@ -331,8 +331,7 @@ ol.style.Circle.prototype.render_ = function(atlasManager) {
 
     if (hasCustomHitDetectionImage) {
       this.hitDetectionCanvas_ = info.hitImage;
-      this.hitDetectionImageSize_ =
-          [info.hitImage.width, info.hitImage.height];
+      this.hitDetectionImageSize_ = [info.hitImage.width, info.hitImage.height];
     } else {
       this.hitDetectionCanvas_ = this.canvas_;
       this.hitDetectionImageSize_ = [imageSize, imageSize];
@@ -361,8 +360,8 @@ ol.style.Circle.prototype.draw_ = function(renderOptions, context, x, y) {
 
   context.beginPath();
   context.arc(
-      renderOptions.size / 2, renderOptions.size / 2,
-      this.radius_, 0, 2 * Math.PI, true);
+    renderOptions.size / 2, renderOptions.size / 2,
+    this.radius_, 0, 2 * Math.PI, true);
 
   if (this.fill_) {
     context.fillStyle = ol.colorlike.asColorLike(this.fill_.getColor());
@@ -393,7 +392,8 @@ ol.style.Circle.prototype.createHitDetectionCanvas_ = function(renderOptions) {
 
   // if no fill style is set, create an extra hit-detection image with a
   // default fill style
-  var context = ol.dom.createCanvasContext2D(renderOptions.size, renderOptions.size);
+  var context = ol.dom.createCanvasContext2D(renderOptions.size,
+    renderOptions.size);
   this.hitDetectionCanvas_ = context.canvas;
 
   this.drawHitDetectionCanvas_(renderOptions, context, 0, 0);
@@ -407,7 +407,8 @@ ol.style.Circle.prototype.createHitDetectionCanvas_ = function(renderOptions) {
  * @param {number} x The origin for the symbol (x).
  * @param {number} y The origin for the symbol (y).
  */
-ol.style.Circle.prototype.drawHitDetectionCanvas_ = function(renderOptions, context, x, y) {
+ol.style.Circle.prototype.drawHitDetectionCanvas_ = function(renderOptions,
+  context, x, y) {
   // reset transform
   context.setTransform(1, 0, 0, 1, 0, 0);
 
@@ -416,8 +417,8 @@ ol.style.Circle.prototype.drawHitDetectionCanvas_ = function(renderOptions, cont
 
   context.beginPath();
   context.arc(
-      renderOptions.size / 2, renderOptions.size / 2,
-      this.radius_, 0, 2 * Math.PI, true);
+    renderOptions.size / 2, renderOptions.size / 2,
+    this.radius_, 0, 2 * Math.PI, true);
 
   context.fillStyle = ol.color.asString(ol.render.canvas.defaultFillStyle);
   context.fill();
@@ -438,18 +439,18 @@ ol.style.Circle.prototype.drawHitDetectionCanvas_ = function(renderOptions, cont
  */
 ol.style.Circle.prototype.getChecksum = function() {
   var strokeChecksum = this.stroke_ ?
-      this.stroke_.getChecksum() : '-';
+    this.stroke_.getChecksum() : '-';
   var fillChecksum = this.fill_ ?
-      this.fill_.getChecksum() : '-';
+    this.fill_.getChecksum() : '-';
 
   var recalculate = !this.checksums_ ||
-      (strokeChecksum != this.checksums_[1] ||
+    (strokeChecksum != this.checksums_[1] ||
       fillChecksum != this.checksums_[2] ||
       this.radius_ != this.checksums_[3]);
 
   if (recalculate) {
     var checksum = 'c' + strokeChecksum + fillChecksum +
-        (this.radius_ !== undefined ? this.radius_.toString() : '-');
+      (this.radius_ !== undefined ? this.radius_.toString() : '-');
     this.checksums_ = [checksum, strokeChecksum, fillChecksum, this.radius_];
   }
 

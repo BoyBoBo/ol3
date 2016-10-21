@@ -25,7 +25,8 @@ ol.geom.GeometryType = {
   MULTI_LINE_STRING: 'MultiLineString',
   MULTI_POLYGON: 'MultiPolygon',
   GEOMETRY_COLLECTION: 'GeometryCollection',
-  CIRCLE: 'Circle'
+  CIRCLE: 'Circle',
+  ELLIPSE: 'Ellipse'
 };
 
 
@@ -110,7 +111,8 @@ ol.geom.Geometry.prototype.clone = function() {};
  * @param {number} minSquaredDistance Minimum squared distance.
  * @return {number} Minimum squared distance.
  */
-ol.geom.Geometry.prototype.closestPointXY = function(x, y, closestPoint, minSquaredDistance) {};
+ol.geom.Geometry.prototype.closestPointXY = function(x, y, closestPoint,
+  minSquaredDistance) {};
 
 
 /**
@@ -280,9 +282,9 @@ ol.geom.Geometry.prototype.translate = function(deltaX, deltaY) {};
  */
 ol.geom.Geometry.prototype.transform = function(source, destination) {
   ol.DEBUG && console.assert(
-      ol.proj.get(source).getUnits() !== ol.proj.Units.TILE_PIXELS &&
-      ol.proj.get(destination).getUnits() !== ol.proj.Units.TILE_PIXELS,
-      'cannot transform geometries with TILE_PIXELS units');
+    ol.proj.get(source).getUnits() !== ol.proj.Units.TILE_PIXELS &&
+    ol.proj.get(destination).getUnits() !== ol.proj.Units.TILE_PIXELS,
+    'cannot transform geometries with TILE_PIXELS units');
   this.applyTransform(ol.proj.getTransform(source, destination));
   return this;
 };
